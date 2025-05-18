@@ -4,6 +4,7 @@ import pygame
 import sys
 
 # https://it.wikipedia.org/wiki/Urto_elastico
+# https://www.youmath.it/lezioni/fisica/dinamica/3000-urto-elastico-in-due-dimensioni.html
 
 # Initialize Pygame
 print("Initializing Pygame...")
@@ -14,8 +15,8 @@ print("Pygame initialized.")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Elastic Collision Simulation")
 
-o1 = Square(50, (0, 0, 0), 200, 10, 175)
-o2 = Square(50, (0, 0, 0), -200, 340, 175)
+o1 = Square((255, 0, 0), 200, 10, 10)
+o2 = Square((0, 0, 0), -200, 5, SCREEN_WIDTH - 30 * 5 - 10)
 
 # Clock for controlling FPS
 clock = pygame.time.Clock()
@@ -48,19 +49,20 @@ while running:
             running = False
 
     # Game logic here
-    o1.update_x_position(1/FPS)
-    o2.update_x_position(1/FPS)
-
     o1.change_direction(o2)
     
     # Drawing
     screen.fill(BG_COLOR)  # Fill the screen with background color
 
     # Draw a square                          X, Y, WIDTH, HEIGHT
-    pygame.draw.rect(screen, o1.color, (o1.x, o1.y, o1.side_length, o1.side_length))
-    pygame.draw.rect(screen, o2.color, (o2.x, o2.y, o2.side_length, o2.side_length))
+    o1.draw(o2, screen)
     
+    font = pygame.font.SysFont(None, 48)
+    text = font.render(f"Collision: {o1.total_collisions + o2.total_collisions}", True, (0, 0, 0))
+    text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5))
+    screen.blit(text, text_rect)
 
+    
     # Update display
     pygame.display.flip()
 
